@@ -52,7 +52,7 @@ bool check_col(int col)
     if (col < 0 || col >= N)
         return false;
 
-    bool vi[N] = false;
+    bool vi[N] = {false};
     int *p;
     for (p = &sudos[0][col]; p <= &sudos[N - 1][col]; p += N)
     {
@@ -68,7 +68,7 @@ bool check_rec(int index)
     if (index < 0 || index >= N)
         return false;
 
-    bool vi[N] = false;
+    bool vi[N] = {false};
     int i, j;
     i = index / 3 * 3;
     j = index % 3 * 3;

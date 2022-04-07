@@ -1,0 +1,25 @@
+button {
+  border-radius: 0;
+  background-color: aliceblue;
+}
+
+grid,
+entry,
+label {
+  border: solid 1px gray;
+}
+
+entry,
+label {
+  font-size: 30px;
+  border-radius: 0px;
+  color: black;
+}
+
+entry {
+  background-color: white;
+}
+
+label {
+  background-color: #e2ebf3;
+}

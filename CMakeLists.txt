@@ -4,11 +4,20 @@ project(c_gui C)
 set(CMAKE_C_STANDARD 99)
 
 FIND_PACKAGE(PkgConfig REQUIRED)
-PKG_CHECK_MODULES(GTK4 REQUIRED gtk4)
+PKG_CHECK_MODULES(GTK3 REQUIRED gtk+-3.0)
+# Add other flags to the compiler
+add_definitions(${GTK3_CFLAGS_OTHER})
 
-include_directories(${GTK4_INCLUDE_DIRS})
-link_directories(${GTK4_LIBRARY_DIRS})
+include_directories(${GTK3_INCLUDE_DIRS})
+link_directories(${GTK3_LIBRARY_DIRS})
 
-add_executable(c_gui main.c sudo.c)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/builder.glade 
+${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/sudo.css
+${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+
+include_directories(${PROJECT_SOURCE_DIR})
+add_executable(c_gui main.c shuffle.c sudo.c)
 target_link_libraries(c_gui
-        ${GTK4_LIBRARIES})
+        ${GTK3_LIBRARIES})

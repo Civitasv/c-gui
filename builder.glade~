@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.38.2 -->
+<interface>
+  <requires lib="gtk+" version="3.24"/>
+  <object class="GtkWindow" id="window">
+    <property name="can-focus">False</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel" id="title">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">label</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkFixed" id="fixed">
+            <property name="width-request">750</property>
+            <property name="height-request">630</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="margin-start">10</property>
+            <property name="margin-end">10</property>
+            <property name="margin-top">10</property>
+            <property name="margin-bottom">10</property>
+            <child>
+              <object class="GtkButton" id="check">
+                <property name="label" translatable="yes">Check</property>
+                <property name="width-request">100</property>
+                <property name="height-request">50</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+              </object>
+              <packing>
+                <property name="x">640</property>
+                <property name="y">260</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="new_game">
+                <property name="label" translatable="yes">New Game</property>
+                <property name="width-request">100</property>
+                <property name="height-request">50</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+              </object>
+              <packing>
+                <property name="x">640</property>
+                <property name="y">340</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="hint">
+                <property name="label" translatable="yes">Hint</property>
+                <property name="width-request">100</property>
+                <property name="height-request">50</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="halign">start</property>
+                <property name="valign">center</property>
+              </object>
+              <packing>
+                <property name="x">640</property>
+                <property name="y">180</property>
+              </packing>
+            </child>
+            <style>
+              <class name="fixed"/>
+            </style>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <style>
+      <class name="window"/>
+    </style>
+  </object>
+</interface>

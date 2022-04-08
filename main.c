@@ -1,6 +1,7 @@
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "sudo.h"
 #include "shuffle.h"
 
@@ -10,6 +11,7 @@ GtkWidget *entries[N][N];
 GtkWidget *grid;
 GtkFixed *fixed;
 int activate_entry_row, activate_entry_col;
+bool is_label[N][N];
 
 static void
 gtk_css_set(GtkWidget *g_widget);
@@ -28,7 +30,15 @@ new_game(GtkWidget *widget,
 
 static void
 entry_activate(GtkWidget *widget,
+               GdkEvent *event,
                gpointer user_data);
+
+static void
+entry_changed(GtkWidget *widget,
+              gpointer user_data);
+
+static void
+entry_insert_text(GtkEditable *editable, const gchar *text, gint length, gint *position, gpointer data);
 
 static void
 activate(GtkApplication *app,
@@ -56,6 +66,18 @@ static void
 hint(GtkWidget *widget,
      gpointer user_data)
 {
+    if (!is_label[activate_entry_row][activate_entry_col])
+    {
+        // g_print("%d %d\n", activate_entry_row, activate_entry_col);
+
+        int answer = sudos_answer[activate_entry_row][activate_entry_col];
+        char str[2];
+        sprintf(str, "%d", answer);
+        GtkWidget *entry = entries[activate_entry_row][activate_entry_col];
+
+        // g_print("%s\n", str);
+        gtk_entry_set_text(GTK_ENTRY(entry), str);
+    }
 }
 
 static void
@@ -98,11 +120,37 @@ new_game(GtkWidget *widget,
 
 static void
 entry_activate(GtkWidget *widget,
+               GdkEvent *event,
                gpointer user_data)
 {
-    int *data = (int *)user_data;
-    g_print("%d", *data);
-    g_print("HELLO");
+    int *data = user_data;
+    int i = *data, j = *(data + 1);
+
+    activate_entry_row = i;
+    activate_entry_col = j;
+}
+
+static void
+entry_changed(GtkWidget *widget,
+              gpointer user_data)
+{
+    gint number = atoi(gtk_entry_get_text(GTK_ENTRY(widget)));
+    sudos_add(number, activate_entry_row, activate_entry_col);
+}
+
+static void
+entry_insert_text(GtkEditable *editable, const gchar *text, gint length, gint *position, gpointer data)
+{
+    int i;
+
+    for (i = 0; i < length; i++)
+    {
+        if (!(text[i] >= '1' && text[i] <= '9'))
+        {
+            g_signal_stop_emission_by_name(G_OBJECT(editable), "insert-text");
+            return;
+        }
+    }
 }
 
 static void
@@ -171,6 +219,7 @@ init_game()
         {
             if (sudos[i][j] == 0)
             {
+                is_label[i][j] = false;
                 entries[i][j] = gtk_entry_new();
                 gtk_widget_set_size_request(entries[i][j], BLOCK_SIZE, BLOCK_SIZE);
                 gtk_entry_set_alignment(GTK_ENTRY(entries[i][j]), 0.5);
@@ -178,12 +227,17 @@ init_game()
                 gtk_entry_set_max_length(GTK_ENTRY(entries[i][j]), 1);
                 gtk_css_set(GTK_WIDGET(entries[i][j]));
                 gtk_grid_attach(GTK_GRID(grid), entries[i][j], j, i, 1, 1);
-                int *data = (int[]){i, j};
-                g_signal_connect(entries[i][j], "focus", G_CALLBACK(entry_activate), data);
+                int *data = malloc(sizeof(int) * 2);
+                *data = i;
+                *(data + 1) = j;
+                g_signal_connect(entries[i][j], "focus-in-event", G_CALLBACK(entry_activate), (gpointer)data);
+                g_signal_connect(entries[i][j], "changed", G_CALLBACK(entry_changed), NULL);
+                g_signal_connect(entries[i][j], "insert-text", G_CALLBACK(entry_insert_text), NULL);
                 gtk_widget_show(entries[i][j]);
             }
             else
             {
+                is_label[i][j] = true;
                 char title[2];
                 sprintf(title, "%d", sudos[i][j]);
                 GtkWidget *label = gtk_label_new_with_mnemonic(title);

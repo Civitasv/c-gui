@@ -8,9 +8,9 @@ int sudos[N][N];
 int sudos_answer[N][N];
 int number_list[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-bool check_row(int row);
-bool check_col(int col);
-bool check_rec(int rec);
+bool check_row(int sudos[N][N], int row);
+bool check_col(int sudos[N][N], int col);
+bool check_rec(int sudos[N][N], int rec);
 bool if_number_in_row(int sudos[N][N], int row, int num);
 bool if_number_in_col(int sudos[N][N], int col, int num);
 bool if_number_in_rec(int sudos[N][N], int rec, int num);
@@ -38,18 +38,18 @@ bool sudos_check()
     bool res = true;
     // check rows
     for (i = 0; i < N; i++)
-        res = res && check_row(i);
+        res = res && check_row(sudos, i);
     // check cols
     for (j = 0; j < N; j++)
-        res = res && check_col(j);
+        res = res && check_col(sudos, j);
     // check rectangles
     for (k = 0; k < N; k++)
-        res = res && check_rec(k);
+        res = res && check_rec(sudos, k);
 
     return res;
 }
 
-bool check_row(int row)
+bool check_row(int sudos[N][N], int row)
 {
     if (row < 0 || row >= N)
         return false;
@@ -57,14 +57,14 @@ bool check_row(int row)
     int *p;
     for (p = &sudos[row][0]; p <= &sudos[row][N - 1]; p++)
     {
-        if (vi[*p])
+        if (vi[*p - 1])
             return false;
-        vi[*p] = true;
+        vi[*p - 1] = true;
     }
     return true;
 }
 
-bool check_col(int col)
+bool check_col(int sudos[N][N], int col)
 {
     if (col < 0 || col >= N)
         return false;
@@ -73,14 +73,14 @@ bool check_col(int col)
     int *p;
     for (p = &sudos[0][col]; p <= &sudos[N - 1][col]; p += N)
     {
-        if (vi[*p])
+        if (vi[*p - 1])
             return false;
-        vi[*p] = true;
+        vi[*p - 1] = true;
     }
     return true;
 }
 
-bool check_rec(int index)
+bool check_rec(int sudos[N][N], int index)
 {
     if (index < 0 || index >= N)
         return false;
@@ -94,9 +94,9 @@ bool check_rec(int index)
     {
         for (k = j; k < j + N / 3; k++)
         {
-            if (sudos[m][k])
+            if (vi[sudos[m][k] - 1])
                 return false;
-            vi[sudos[m][k]] = true;
+            vi[sudos[m][k] - 1] = true;
         }
     }
     return true;
